@@ -38,6 +38,7 @@ dependencies:
   flutter_svg: ^2.0.10+1
   google_maps_flutter: ^2.6.0
   flutter_osm_plugin: ^0.70.4
+  dio: ^5.4.1
 
 dev_dependencies:
   flutter_test:
