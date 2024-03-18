@@ -8,7 +8,7 @@ class UserController {
     };
     print(data);
     try {
-      var response = await Dio().post("http://10.22.7.9:8000/", data: data);
+      var response = await Dio().post("https://sawari.onrender.com/", data: data);
       print(response);
       // Handle the response here
     } catch (e) {

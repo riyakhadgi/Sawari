@@ -15,10 +15,11 @@ def login(request):
             user= authenticate(username=username,password=password)
             if user is not None:
                 login(request, user)
+                return JsonResponse({"success": True, "message": "Works"})
             else:
                 print("Authentication failed")
            
-            return JsonResponse({"success": True, "message": "Works"})
+            
          
         except json.JSONDecodeError:
             return JsonResponse({"success": False, "message": "Invalid JSON data."}, status=400)
