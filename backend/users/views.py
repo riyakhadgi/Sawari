@@ -14,6 +14,7 @@ def login(request):
             username = data.get('username')
             password = data.get('password')
             user= authenticate(username=username,password=password)
+            print(user)
             if user is not None:
                 login(request, user)
                 return JsonResponse({"success": True, "message": "Works"})

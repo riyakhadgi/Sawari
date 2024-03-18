@@ -25,7 +25,7 @@ class UserData(AbstractUser):
     )
 
     def __str__(self):
-        return self.email
+        return self.username
 
 class DriverData(AbstractUser):
     phonenumber = models.CharField(max_length=20)
@@ -54,4 +54,4 @@ class DriverData(AbstractUser):
     
 
     def __str__(self):
-        return self.email
+        return self.username
