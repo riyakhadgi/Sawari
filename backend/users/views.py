@@ -6,27 +6,34 @@ from django.contrib.auth.hashers import make_password
 from .serializer import *
 from django.contrib.auth import authenticate
 
+@csrf_exempt
+from django.contrib.auth import authenticate, login as auth_login
+import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
 def login(request):
     if request.method == "POST":
         try:
             data = json.loads(request.body)
+            print(data)
             username = data.get('username')
             password = data.get('password')
-
-            # Authenticate user
             user = authenticate(username=username, password=password)
-
+            print(user)
             if user is not None:
-                # Login user
-                login(request, user)
-                return JsonResponse({"success": True, "message": "Login successful"})
+                auth_login(request, user)  # Renamed login function to auth_login
+                return JsonResponse({"success": True, "message": "Works"})
             else:
-                return JsonResponse({"success": False, "message": "Invalid username or password"}, status=401)
+                return JsonResponse({"success": False, "message": "Authentication failed"})
             
+         
         except json.JSONDecodeError:
             return JsonResponse({"success": False, "message": "Invalid JSON data."}, status=400)
     else:
         return JsonResponse({"success": False, "message": "Only POST requests are allowed."}, status=405)
+
     
 @csrf_exempt
 def signup(request):
