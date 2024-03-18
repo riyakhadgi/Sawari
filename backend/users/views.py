@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from .models import *
+from django.contrib.auth.hashers import make_password
 from .serializer import *
 from django.contrib.auth import authenticate
 
@@ -33,7 +34,9 @@ def signup(request):
         data=json.loads(request.body)
         serializer=UserDataSerializer(data=data)
         if serializer.is_valid():
+
             user=serializer.save()
+            user.password = make_password(data['password'])
             user.save()
             return JsonResponse({"sucess": True, "message": "Signed up"})
         else:
