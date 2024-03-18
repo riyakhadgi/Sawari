@@ -17,8 +17,7 @@ def login(request):
                 login(request, user)
                 return JsonResponse({"success": True, "message": "Works"})
             else:
-                print("Authentication failed")
-           
+                return JsonResponse({"success": False, "message": "Authentication failed"})
             
          
         except json.JSONDecodeError:
