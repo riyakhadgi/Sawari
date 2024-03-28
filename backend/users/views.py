@@ -6,7 +6,7 @@ from django.contrib.auth.hashers import make_password
 from .serializer import *
 from django.contrib.auth import authenticate
 
-@csrf_exempt
+
 from django.contrib.auth import authenticate, login as auth_login
 import json
 from django.http import JsonResponse

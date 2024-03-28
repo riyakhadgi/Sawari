@@ -15,7 +15,7 @@ SECRET_KEY = 'django-insecure-9)2nj$jguv!)_5f+q7z@lh60bmy-07n$yp5u^!_6ug_p9ma3jm
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['10.22.7.9','https://sawari.onrender.com/','*']
+ALLOWED_HOSTS = ['192.168.1.77','https://sawari.onrender.com/','.vercel.app']
 
 
 # Application definition
@@ -78,9 +78,9 @@ DATABASES = {
         'HOST': 'localhost',
     }
 }
-DATABASES = {
-    'default':dj_database_url.parse(os.environ.get('DATABASE_URL'))
-}
+# DATABASES = {
+    # 'default':dj_database_url.parse(os.environ.get('DATABASE_URL'))
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
