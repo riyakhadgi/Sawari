@@ -1,12 +1,12 @@
 import'package:flutter/material.dart';
-class pickuppage extends StatefulWidget {
-  const pickuppage({super.key});
+class destinationpage extends StatefulWidget {
+  const destinationpage({super.key});
 
   @override
-  State<pickuppage> createState() => _pickuppageState();
+  State<destinationpage> createState() => _destinationpageState();
 }
 
-class _pickuppageState extends State<pickuppage> {
+class _destinationpageState extends State<destinationpage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold( 
@@ -23,7 +23,7 @@ class _pickuppageState extends State<pickuppage> {
         body: Container(child: Column(children:[
          TextField(decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                labelText: 'Enter your pickup location here',
+                labelText: 'Enter your destination here',
               ),
               ),  
               ]),

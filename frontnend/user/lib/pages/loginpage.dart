@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:user/Controller/UserController.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  UserController user = new UserController();
+  UserController user = UserController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,10 +48,22 @@ class LoginPage extends StatelessWidget {
                 String username = usernameController.text;
                 String password = passwordController.text;
 
-                // Do something with username and password
-                print("Username: $username");
-                print("Password: $password");
-                user.login(username, password);
+                // Perform authentication logic here
+                // For example:
+                 user.login(username, password);
+                print(user.isAuth);
+            
+                if (user.isAuth) {
+                  // Navigate to the dashboard page
+                  Navigator.pushReplacementNamed(context, '/dashboard');
+                } else {
+                  // Handle authentication failure, e.g., display an error message
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Invalid username or password'),
+                    ),
+                  );
+                }
               },
               child: Text("Continue"),
             ),

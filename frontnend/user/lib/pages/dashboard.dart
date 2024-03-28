@@ -90,7 +90,7 @@ class _DashboardState extends State<Dashboard> {
           border: OutlineInputBorder(),
           labelText: 'Enter your fare here',
         ),),
-              ElevatedButton(onPressed: (){}, child: Text("Find Driver"))
+              
         ]),
         )
         ]
