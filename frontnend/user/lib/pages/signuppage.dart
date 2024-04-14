@@ -7,28 +7,28 @@ class signuppage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:AppBar(title:IconButton(onPressed: (){}, icon:  Icon(Icons.arrow_back), )),
+      appBar:AppBar(title:IconButton(onPressed: (){}, icon:  const Icon(Icons.arrow_back), )),
       body: Container(child: (Column( children: [ 
-        Text("Create account"),
-        Text("Enter your email:"),
-         TextField( decoration: InputDecoration(
+        const Text("Create account"),
+        const Text("Enter your email:"),
+         const TextField( decoration: InputDecoration(
           border: OutlineInputBorder(),
           labelText: 'Enter your email here',
          ),
         ),
-        Text("Create Password:"),
-         TextField( decoration: InputDecoration(
+        const Text("Create Password:"),
+         const TextField( decoration: InputDecoration(
           border: OutlineInputBorder(),
           labelText: 'Type your password here',
          ),
         ),
-        Text("Confirm Password:"),
-         TextField( decoration: InputDecoration(
+        const Text("Confirm Password:"),
+         const TextField( decoration: InputDecoration(
           border: OutlineInputBorder(),
           labelText: 'Retype your password',
          ),
         ),
-        ElevatedButton(onPressed: (){}, child: Text("Create"))
+        ElevatedButton(onPressed: (){}, child: const Text("Create"))
         ],)),),
     );
   }

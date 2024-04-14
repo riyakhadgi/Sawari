@@ -6,8 +6,8 @@ class settings extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
        appBar: AppBar(
-        leading: IconButton(onPressed: (){}, icon:Icon(Icons.menu)),
-        actions: [Text("Settings")],
+        leading: IconButton(onPressed: (){}, icon:const Icon(Icons.menu)),
+        actions: const [Text("Settings")],
        ),
        body: Container(child: Column(children: [
         TextButton(

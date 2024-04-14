@@ -11,18 +11,18 @@ class _profileState extends State<profile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(onPressed: (){}, icon: Icon(Icons.menu),)
+        leading: IconButton(onPressed: (){}, icon: const Icon(Icons.menu),)
       ),
       body: Container(child:Column(children: [
-        TextField( decoration: InputDecoration(
+        const TextField( decoration: InputDecoration(
           border: OutlineInputBorder(),
           labelText: 'Username',
         ),),
-        TextField( decoration: InputDecoration(
+        const TextField( decoration: InputDecoration(
           border: OutlineInputBorder(),
           labelText: 'Surname',
         ),),
-        ElevatedButton(onPressed: (){}, child: Text("save")),
+        ElevatedButton(onPressed: (){}, child: const Text("save")),
       ],)),
     );
   }

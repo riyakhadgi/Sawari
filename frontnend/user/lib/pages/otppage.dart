@@ -6,15 +6,15 @@ class otppage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:AppBar(title:IconButton(onPressed: (){}, icon:  Icon(Icons.arrow_back), )),
+      appBar:AppBar(title:IconButton(onPressed: (){}, icon:  const Icon(Icons.arrow_back), )),
       body: Container(child:Column(children: [
-        Text("OTP Verification"),
-        TextField( decoration: InputDecoration(
+        const Text("OTP Verification"),
+        const TextField( decoration: InputDecoration(
           border: OutlineInputBorder(),
           labelText: 'OTP',
         ),
         ),
-        ElevatedButton(onPressed: (){}, child: Text("VERIFY"))
+        ElevatedButton(onPressed: (){}, child: const Text("VERIFY"))
         ],))
 
     );

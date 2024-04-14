@@ -1,13 +1,6 @@
 import 'package:flutter/material.dart' show BuildContext, MaterialApp, StatelessWidget, Widget, runApp;
-import 'package:flutter/src/widgets/container.dart';
 import 'package:user/pages/dashboard.dart';
-import 'package:user/pages/destinationpage.dart';
-import 'package:user/pages/loginpage.dart';
-import 'package:user/pages/safteytips.dart';
 import 'package:user/pages/splashscreen.dart';
-import 'package:user/pages/pickuppage.dart';
-
-
 void main() {
   runApp(const MyApp());
 }
@@ -20,10 +13,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return  MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: safteytips(),
-      routes: {
-        '/dashboard':(context)=> Dashboard(),
-      },
+      home: const SplashScreen(),
+      routes:{
+        '/dashboard':(context)=> const Dashboard(),
+      }
     );
     
   }

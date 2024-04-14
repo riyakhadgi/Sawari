@@ -15,7 +15,7 @@ SECRET_KEY = 'django-insecure-9)2nj$jguv!)_5f+q7z@lh60bmy-07n$yp5u^!_6ug_p9ma3jm
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.77','https://sawari.onrender.com/','.vercel.app']
+ALLOWED_HOSTS = ['192.168.1.94','192.168.1.77','10.22.11.244']
 
 
 # Application definition
@@ -28,8 +28,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "corsheaders",
-    'rest_framework', 
-    'users.apps.UsersConfig', 
+    'rest_framework',  
+    'UserManagement.apps.UsermanagementConfig',
+    'bookride.apps.BookrideConfig',
 ]
 
 MIDDLEWARE = [
@@ -43,7 +44,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-AUTH_USER_MODEL = 'users.UserData'
 ROOT_URLCONF = 'sawari.urls'
 
 TEMPLATES = [
@@ -130,3 +130,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL= "/media/"
 MEDIA_ROO= os.path.join(BASE_DIR,'media')
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:63362"
+]

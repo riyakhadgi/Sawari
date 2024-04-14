@@ -1,29 +1,20 @@
 import 'package:dio/dio.dart';
 
 class UserController {
-   bool isAuth=false;
+  final url = 'http://192.168.1.94:8000';
 
-  Future<void> login(String username, String password) async {
-   
-    var data = {
-      "username": username,
-      "password": password
-    };
 
-    try {
-      var response = await Dio().post("http://192.168.1.77:8000/", data: data);
+  Future<Map<String,dynamic>> login(String username, String password) async {
+     var data = {
+       "username": username,
+       "password": password
+     };
+      print(data);
+      var response = await Dio().post("$url/", data: data);
       print(response.data);
-      if (response.data['success'] != null && response.data['success'] == true) {
-        print("hi");
-       isAuth=true;
-      } else {
-        // Handle login failure
-        isAuth= false;
-      }
-    } catch (e) {
-      // Handle Dio errors
-      print('Error logging in: $e');
-      
-    }
-  }
+      return response.data;
+
+   }
+
+
 }

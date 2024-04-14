@@ -1,9 +1,9 @@
 from rest_framework import serializers
 from .models import *
 
-class UserDataSerializer(serializers.ModelSerializer):
+class AdminUserSerializer(serializers.ModelSerializer):
     class Meta:
-        model=UserData
+        model=adminUser
         fields= '__all__'
 
     def to_representation(self, instance):
@@ -11,9 +11,19 @@ class UserDataSerializer(serializers.ModelSerializer):
         data.pop('password', None)
         return data
     
-class DriverDataSerializer(serializers.ModelSerializer):
+class PassengerUserSerailizer(serializers.ModelSerializer):
     class Meta:
-        model=DriverData
+        model=passengerUser
+        fields='__all__'
+
+    def to_representation(self, instance):
+        data=super().to_representation(instance)
+        data.pop('password', None)
+        return data
+    
+class DriverUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=driverUser
         fields='__all__'
 
     def to_representation(self, instance):

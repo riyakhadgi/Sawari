@@ -6,8 +6,8 @@ class requesthistory extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(onPressed: (){}, icon: Icon(Icons.menu)),
-        actions: [Text("My Rides")],
+        leading: IconButton(onPressed: (){}, icon: const Icon(Icons.menu)),
+        actions: const [Text("My Rides")],
       ),
     );
   }

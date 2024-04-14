@@ -6,8 +6,8 @@ class saftey extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(onPressed: (){}, icon: Icon(Icons.menu)),
-        actions: [Text("Saftey")],
+        leading: IconButton(onPressed: (){}, icon: const Icon(Icons.menu)),
+        actions: const [Text("Saftey")],
       ),
       body: Container(child:Column(children: [
       TextButton(
