@@ -464,6 +464,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  open_route_service:
+    dependency: "direct main"
+    description:
+      name: open_route_service
+      sha256: "1cdd6cdce86d2dc88f46e0cf233fe8284651e566e6cae5fe1e8a75e4b3737667"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.6"
   open_street_map_search_and_pick:
     dependency: "direct main"
     description:
@@ -472,6 +480,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.1.1"
+  osrm:
+    dependency: "direct main"
+    description:
+      name: osrm
+      sha256: "45e0871eee51c8bcfb63916ed6590f9fa9c4f9b89a5efecfb100cdf18823c9ac"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.5"
   path:
     dependency: transitive
     description:
@@ -600,6 +616,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
+  recase:
+    dependency: transitive
+    description:
+      name: recase
+      sha256: e4eb4ec2dcdee52dcf99cb4ceabaffc631d7424ee55e56f280bc039737f89213
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.0"
   routing_client_dart:
     dependency: transitive
     description:

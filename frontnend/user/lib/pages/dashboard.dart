@@ -1,12 +1,16 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'dart:math' show cos, sqrt, asin;
+import 'package:open_route_service/open_route_service.dart';
 import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:user/Controller/BookingController.dart';
+import 'package:user/pages/AcceptedModal.dart';
 
 
 class Dashboard extends StatefulWidget {
@@ -18,14 +22,19 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   bool isLoading = true;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   double lat = 0.0;
   double long = 0.0;
   String userLocation = '';
   late TextEditingController pickupLocationController;
   late TextEditingController destinationController;
+  late TextEditingController fareController;
   late Marker destinationMarker;
+  double distance = 0.0;
   List<Marker> markerData = [];
   List<Polyline> polylineData = [];
+
+  Book book=new Book();
 
 
   @override
@@ -40,6 +49,7 @@ class _DashboardState extends State<Dashboard> {
     super.initState();
     pickupLocationController = TextEditingController();
     destinationController = TextEditingController();
+    fareController=TextEditingController();
     _getUserLocation();
   }
 
@@ -95,11 +105,12 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         leading: SvgPicture.asset("logo/logo.svg", width: 200, height: 200),
         actions: [
           IconButton(
-            onPressed: () async{
+            onPressed: () async {
               SharedPreferences prefs = await SharedPreferences.getInstance();
               Map<String, dynamic> allData = prefs.getKeys().fold<Map<String, dynamic>>(
                 {},
@@ -114,16 +125,72 @@ class _DashboardState extends State<Dashboard> {
             icon: Icon(Icons.location_on),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              // Open the drawer
+              _scaffoldKey.currentState!.openDrawer();
+            },
             icon: Icon(Icons.menu),
           ),
         ],
       ),
-      body: isLoading ? CircularProgressIndicator(): body(),
+      drawer: Container(
+        width: 250,
+        child: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              DrawerHeader(
+                decoration: BoxDecoration(
+                ),
+                child: SvgPicture.asset("logo/logo.svg", width: 200, height: 200),
+              ),
+              ListTile(
+                title: Text("Settings"),
+                onTap: () {
+                  // Update UI based on item selection
+                  Navigator.pop(context); // Close the drawer
+                },
+              ),
+              ListTile(
+                title: Text('Item 2'),
+                onTap: () {
+                  // Update UI based on item selection
+                  Navigator.pop(context); // Close the drawer
+                },
+              ),
+              ListTile(
+                title: Text('Item 2'),
+                onTap: () {
+                  // Update UI based on item selection
+                  Navigator.pop(context); // Close the drawer
+                },
+              ),
+              ListTile(
+                title: Text('Safety Tips'),
+                onTap: () {
+                  // Update UI based on item selection
+                  Navigator.pop(context); // Close the drawer
+                },
+              ),
+              ListTile(
+                title: Text('Item 2'),
+                onTap: () {
+                  // Update UI based on item selection
+                  Navigator.pop(context); // Close the drawer
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+      body: isLoading ? CircularProgressIndicator() : body(),
     );
   }
 
-  SingleChildScrollView body() {
+
+
+
+SingleChildScrollView body() {
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -178,12 +245,39 @@ class _DashboardState extends State<Dashboard> {
                ),
                 SizedBox(height: 10,),
                 TextField(
+                  controller: fareController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Enter your fare here',
                   ),
                 ),
+                ElevatedButton(onPressed: () async {
+                  String fare = fareController.text;
+                  String pickup= pickupLocationController.text;
+                  String destination=destinationController.text;
 
+                  Map<String,dynamic> data={
+                    "pickup":pickup,
+                    "drop":destination,
+                    "distance":distance,
+                    "fare": fare,
+                  };
+                  // showWaitingModal(context);
+                  var response=await book.addBooking(data);
+
+                  print(response);
+                  if(response['success']){
+                    showWaitingModal(context);
+                  }else{
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(response['message']),
+                        duration: Duration(seconds: 3),
+                      ),
+                    );
+                  }
+                }
+                , child: Text("Book Now"))
               ],
             ),
           )
@@ -196,12 +290,7 @@ class _DashboardState extends State<Dashboard> {
     urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
     userAgentPackageName: 'dev.fleaflet.flutter_map.example',
   );
-  // TileLayer  openStreetMapTileLayer() {
-  //   return TileLayer(
-  //     urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-  //     userAgentPackageName: 'dev.fleaflet.flutter_map.example',
-  //   );
-  // }
+
 
   void _showModal(BuildContext context) {
     showModalBottomSheet(
@@ -214,9 +303,14 @@ class _DashboardState extends State<Dashboard> {
               child: OpenStreetMapSearchAndPick(
                 buttonColor: Colors.blue,
                 buttonText: 'Set Current Location',
-                onPicked: (pickedData) {
+                onPicked: (pickedData) async {
+
+                  await _drawRoute(
+                    LatLng(lat, long),
+                    LatLng(pickedData.latLong.latitude, pickedData.latLong.longitude),
+                  );
                   setState(() {
-                    destinationController.text = pickedData.addressName;
+                    destinationController.text = shortenAddressName(pickedData.addressName);
                     destinationMarker = Marker(
                       point: LatLng(pickedData.latLong.latitude, pickedData.latLong.longitude),
                       width: 50,
@@ -228,14 +322,7 @@ class _DashboardState extends State<Dashboard> {
                         color: Colors.blue,
                       ),
                     );
-                  //   add polylines
-                    polylineData.add(
-                      Polyline(
-                        points: [LatLng(lat, long), LatLng(pickedData.latLong.latitude, pickedData.latLong.longitude)],
-                        color: Colors.blue,
-                        strokeWidth: 3.0,
-                      ),
-                    );
+                    //   add polylines
                   });
                   Navigator.pop(context); // Close the modal bottom sheet
                 },
@@ -247,15 +334,75 @@ class _DashboardState extends State<Dashboard> {
     ).then((_) {
       if (destinationController.text.isNotEmpty) {
         setState(() {
+          if (markerData.length == 2) {
+            markerData.removeAt(1);
+          }
+
           // Update the destination marker
           markerData.add(destinationMarker);
         });
       }
     });
   }
+  Future<void> _drawRoute(LatLng start, LatLng end) async {
+    final OpenRouteService client = OpenRouteService(
+      apiKey: '5b3ce3597851110001cf624874a719d60289444fba4937618bebd19b',
+    );
 
+    final List<ORSCoordinate> routeCoordinates = await client.directionsRouteCoordsGet(
+      startCoordinate: ORSCoordinate(latitude: start.latitude, longitude: start.longitude),
+      endCoordinate: ORSCoordinate(latitude: end.latitude, longitude: end.longitude),
+      profileOverride: ORSProfile.drivingCar
+    );
+    if (routeCoordinates.isNotEmpty) {
 
+      for (int i = 0; i < routeCoordinates.length - 1; i++) {
+        var newdistance =calculateDistance(routeCoordinates[i].latitude,routeCoordinates[i].longitude, routeCoordinates[i+1].latitude, routeCoordinates[i+1].longitude);
+        distance += newdistance;
+      }
+      final List<LatLng> routePoints = routeCoordinates
+          .map((coordinate) => LatLng(coordinate.latitude, coordinate.longitude))
+          .toList();
+      // final fare= _calculatefare(distance);
+      setState(() {
+        polylineData.clear();
+        polylineData.add(
+          Polyline(
+            points: routePoints,
+            color: Colors.blue,
+            strokeWidth: 3.0,
+          ),
+        );
+      });
+      double fare=_calculateFare(distance);
+      setState(() {
+        fareController.text=fare.toStringAsFixed(2);;
+      });
+      print('Distance: $distance km');
+      print('Fare: Rs $fare');
+    }
 
-
+  }
+  double calculateDistance(lat1, lon1, lat2, lon2){
+    var p = 0.017453292519943295;
+    var c = cos;
+    var a = 0.5 - c((lat2 - lat1) * p)/2 +
+        c(lat1 * p) * c(lat2 * p) *
+            (1 - c((lon2 - lon1) * p))/2;
+    return 12742 * asin(sqrt(a));
+  }
+  double _calculateFare(double distance){
+    //       1km=Rs10
+  //    1km=1000m
+  //    1000m=Rs10
+  //    1m=rs0.01
+    double fare = distance * 10.0; // fare for distance in km
+    fare = fare.ceilToDouble(); // rounding up the fare value
+    return fare;
+  }
+  String shortenAddressName(String addressName) {
+    List<String> parts = addressName.split(',').take(2).toList();
+    return parts.join(', ');
+  }
 
 }

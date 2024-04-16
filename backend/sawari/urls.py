@@ -4,7 +4,8 @@ from django.urls import path,include
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',include("UserManagement.urls"))
+    path('',include("UserManagement.urls")),
+    path('book/',include("bookride.urls"))
 ]
 
 urlpatterns+=staticfiles_urlpatterns()
