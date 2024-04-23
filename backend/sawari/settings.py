@@ -15,7 +15,7 @@ SECRET_KEY = 'django-insecure-9)2nj$jguv!)_5f+q7z@lh60bmy-07n$yp5u^!_6ug_p9ma3jm
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.94','192.168.1.77','10.22.11.244']
+ALLOWED_HOSTS = ['192.168.1.94','127.0.0.1','192.168.1.77','10.22.11.244']
 
 
 # Application definition
@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+     'rest_framework_simplejwt',
     "corsheaders",
     'rest_framework',  
     'UserManagement.apps.UsermanagementConfig',
@@ -134,3 +135,11 @@ CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:63362"
 ]
+
+EMAIL_BACKEND ='django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'rinishakhadgi0@gmail.com'
+EMAIL_HOST_PASSWORD = 'ejhn puqr sxof aguu'
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False

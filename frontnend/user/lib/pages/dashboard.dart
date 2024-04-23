@@ -262,7 +262,8 @@ SingleChildScrollView body() {
                     "distance":distance,
                     "fare": fare,
                   };
-                  // showWaitingModal(context);
+                  showWaitingModal(context);
+
                   var response=await book.addBooking(data);
 
                   print(response);

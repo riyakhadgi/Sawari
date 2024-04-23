@@ -31,3 +31,22 @@ def getRide(request):
         return JsonResponse({'success':True,'data':serializer.data})
     return JsonResponse({'success':False,'message':'Method should be GET'})
 
+# this is for admin to get all the rides
+@csrf_exempt
+def getRideAdmin(request):
+    if request.method=='GET':
+        rides=RideRequested.objects.all()
+        accepted=AcceptedRide.objects.all()
+        canceled=CanceledRide.objects.all()
+
+        ride=RideRequestedSerializer(rides,many=True).data
+        accept=AcceptedRideSerializer(accepted,many=True).data
+        cancel=CanceledRideSerializer(canceled,many=True).data
+
+        context = {
+        'ride_requests': ride,
+        'accepted_requests': accept,
+        'canceled_requests': cancel
+        }
+        return JsonResponse({'success':True,'data':context})
+    return JsonResponse({'success':False,'message':'Method should be GET'})

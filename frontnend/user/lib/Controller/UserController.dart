@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
 class UserController {
-  final url = 'http://192.168.1.94:8000';
+  final url = 'http:// 192.168.1.77:8000';
 
 
   Future<Map<String,dynamic>> login(String username, String password) async {

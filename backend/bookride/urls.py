@@ -4,4 +4,5 @@ from .views import *
 
 urlpatterns = [
     path('addtemp/',addRide, name="addTempRide"),
+    path("getallrides/",getRideAdmin, name="getallrides")
 ]

@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import *
 
 class AdminUserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(required=False)
     class Meta:
         model=adminUser
         fields= '__all__'
