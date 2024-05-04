@@ -7,6 +7,11 @@ import Login from './Component/Login.jsx'
 import Dashboard from './Component/Dashboard.jsx'
 import Sidebar from './Component/Sidebar.jsx';
 import Ride from './Component/Ride.jsx';
+import Users from './Component/Users.jsx';
+import Admins from './Component/Admins.jsx';
+import Drivers from './Component/Drivers.jsx';
+import Prebooking from './Component/Prebooking.jsx';
+
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -24,6 +29,10 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard/>} />
           <Route path="/ride" element={<Ride/>} />
+          <Route path="/users" element={<Users/>} />
+          <Route path= "/admins" element={<Admins/>} />	
+          <Route path="/drivers" element={<Drivers/>} />
+          <Route path="/prebooking" element={<Prebooking/>} />
           </Routes>
         </main>
       </div>

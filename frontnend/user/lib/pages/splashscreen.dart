@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:user/pages/dashboard.dart';
 import 'package:user/pages/loginpage.dart';
+import 'package:permission_handler/permission_handler.dart';
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -16,8 +17,21 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    requestLocationPermission();
     _navigateAfterDelay();
   }
+  void requestLocationPermission() async {
+    var status = await Permission.location.request();
+    if (status.isGranted) {
+      // Permission granted, proceed with location-related tasks
+    } else if (status.isDenied) {
+      // Permission denied
+    } else if (status.isPermanentlyDenied) {
+      // Permission permanently denied, open app settings
+      openAppSettings();
+    }
+  }
+
 
   Future<void> _navigateAfterDelay() async {
     await Future.delayed(const Duration(seconds: 5));

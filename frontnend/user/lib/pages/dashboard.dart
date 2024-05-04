@@ -11,7 +11,9 @@ import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:user/Controller/BookingController.dart';
 import 'package:user/pages/AcceptedModal.dart';
-
+import 'package:user/pages/Drawer.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:web_socket_channel/io.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key});
@@ -33,7 +35,7 @@ class _DashboardState extends State<Dashboard> {
   double distance = 0.0;
   List<Marker> markerData = [];
   List<Polyline> polylineData = [];
-
+  final channel = IOWebSocketChannel.connect('ws://192.168.1.94:8000/ws/notifications/');
   Book book=new Book();
 
 
@@ -133,56 +135,7 @@ class _DashboardState extends State<Dashboard> {
           ),
         ],
       ),
-      drawer: Container(
-        width: 250,
-        child: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              DrawerHeader(
-                decoration: BoxDecoration(
-                ),
-                child: SvgPicture.asset("logo/logo.svg", width: 200, height: 200),
-              ),
-              ListTile(
-                title: Text("Settings"),
-                onTap: () {
-                  // Update UI based on item selection
-                  Navigator.pop(context); // Close the drawer
-                },
-              ),
-              ListTile(
-                title: Text('Item 2'),
-                onTap: () {
-                  // Update UI based on item selection
-                  Navigator.pop(context); // Close the drawer
-                },
-              ),
-              ListTile(
-                title: Text('Item 2'),
-                onTap: () {
-                  // Update UI based on item selection
-                  Navigator.pop(context); // Close the drawer
-                },
-              ),
-              ListTile(
-                title: Text('Safety Tips'),
-                onTap: () {
-                  // Update UI based on item selection
-                  Navigator.pop(context); // Close the drawer
-                },
-              ),
-              ListTile(
-                title: Text('Item 2'),
-                onTap: () {
-                  // Update UI based on item selection
-                  Navigator.pop(context); // Close the drawer
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
+      drawer: MyDrawer(),
       body: isLoading ? CircularProgressIndicator() : body(),
     );
   }
@@ -190,7 +143,7 @@ class _DashboardState extends State<Dashboard> {
 
 
 
-SingleChildScrollView body() {
+  SingleChildScrollView body() {
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -206,7 +159,7 @@ SingleChildScrollView body() {
               children: [
                 openStreetMapTileLayer, // Make sure openStreetMapTileLayer is correctly defined
                 MarkerLayer(
-                  markers: markerData
+                    markers: markerData
                 ),
                 PolylineLayer(
                   polylines: polylineData,
@@ -225,24 +178,24 @@ SingleChildScrollView body() {
                     labelText: 'Pickup Location',
                   ),
                 ),
-               SizedBox(height: 10,),
-               GestureDetector(
-                 child:  TextField(
-                   controller: destinationController,
-                   readOnly: true,
-                   onTap: (){
-                     _showModal(context);
-                   },
-                   decoration: InputDecoration(
-                     border: OutlineInputBorder(),
-                     labelText: 'Destination',
+                SizedBox(height: 10,),
+                GestureDetector(
+                  child:  TextField(
+                    controller: destinationController,
+                    readOnly: true,
+                    onTap: (){
+                      _showModal(context);
+                    },
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Destination',
 
-                   ),
-                 ),
-                 onTap: (){
-                   _showModal(context);
-                 },
-               ),
+                    ),
+                  ),
+                  onTap: (){
+                    _showModal(context);
+                  },
+                ),
                 SizedBox(height: 10,),
                 TextField(
                   controller: fareController,
@@ -251,6 +204,7 @@ SingleChildScrollView body() {
                     labelText: 'Enter your fare here',
                   ),
                 ),
+                SizedBox(height: 10,),
                 ElevatedButton(onPressed: () async {
                   String fare = fareController.text;
                   String pickup= pickupLocationController.text;
@@ -262,7 +216,6 @@ SingleChildScrollView body() {
                     "distance":distance,
                     "fare": fare,
                   };
-                  showWaitingModal(context);
 
                   var response=await book.addBooking(data);
 
@@ -278,7 +231,7 @@ SingleChildScrollView body() {
                     );
                   }
                 }
-                , child: Text("Book Now"))
+                    , child: Text("Book Now"))
               ],
             ),
           )
@@ -351,9 +304,9 @@ SingleChildScrollView body() {
     );
 
     final List<ORSCoordinate> routeCoordinates = await client.directionsRouteCoordsGet(
-      startCoordinate: ORSCoordinate(latitude: start.latitude, longitude: start.longitude),
-      endCoordinate: ORSCoordinate(latitude: end.latitude, longitude: end.longitude),
-      profileOverride: ORSProfile.drivingCar
+        startCoordinate: ORSCoordinate(latitude: start.latitude, longitude: start.longitude),
+        endCoordinate: ORSCoordinate(latitude: end.latitude, longitude: end.longitude),
+        profileOverride: ORSProfile.drivingCar
     );
     if (routeCoordinates.isNotEmpty) {
 
@@ -394,9 +347,9 @@ SingleChildScrollView body() {
   }
   double _calculateFare(double distance){
     //       1km=Rs10
-  //    1km=1000m
-  //    1000m=Rs10
-  //    1m=rs0.01
+    //    1km=1000m
+    //    1000m=Rs10
+    //    1m=rs0.01
     double fare = distance * 10.0; // fare for distance in km
     fare = fare.ceilToDouble(); // rounding up the fare value
     return fare;

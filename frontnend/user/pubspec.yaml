@@ -44,6 +44,8 @@ dependencies:
   open_street_map_search_and_pick: ^0.1.1
   osrm: ^0.0.5
   open_route_service: ^1.2.6
+  flutter_datetime_picker_plus: ^2.2.0
+  web_socket_channel: ^2.4.5
 
 
 dev_dependencies:

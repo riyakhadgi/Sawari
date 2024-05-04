@@ -3,12 +3,11 @@ import { useState } from "react";
 import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import RestaurantOutlinedIcon from "@mui/icons-material/RestaurantOutlined";
-import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined";
 import DirectionsCarOutlinedIcon from "@mui/icons-material/DirectionsCarOutlined";
-import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import GroupIcon from '@mui/icons-material/Group';
+import BookIcon from '@mui/icons-material/Book';
+import PedalBikeIcon from '@mui/icons-material/PedalBike';
 import { Link } from "react-router-dom";
 import Cookie from "js-cookie";
 import { tokens } from "../Theme";
@@ -56,28 +55,35 @@ const SideItem = ({ selected, setSelected }) => {
       <Item
         title="Ride"
         to="/ride"
-        icon={<RestaurantOutlinedIcon />}
+        icon={<DirectionsCarOutlinedIcon />}
         selected={selected}
         setSelected={setSelected}
       />
       <Item
         title="PreBooking"
-        to="/restaurant/orders"
-        icon={<AdminPanelSettingsIcon />}
+        to="/prebooking"
+        icon={<BookIcon />}
         selected={selected}
         setSelected={setSelected}
       />
       <Item
         title="Driver"
-        to="/restaurant/payment"
-        icon={<PaymentsOutlinedIcon />}
+        to="/drivers"
+        icon={<PedalBikeIcon/>}
         selected={selected}
         setSelected={setSelected}
       />
        <Item
         title="User"
-        to="/restaurant/payment"
-        icon={<PaymentsOutlinedIcon />}
+        to="/users"
+        icon={<GroupIcon/>}
+        selected={selected}
+        setSelected={setSelected}
+      />
+        <Item
+        title="Admin"
+        to="/admins"
+        icon={<AdminPanelSettingsIcon/>}
         selected={selected}
         setSelected={setSelected}
       />
@@ -134,6 +140,7 @@ export default function Menubar() {
        
       
           <Box textAlign="center" display="grid" gap={2}>
+
             <Typography variant="h2" fontWeight="bold" color={"white"}>
               Welcome back
             </Typography>

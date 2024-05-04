@@ -50,15 +50,10 @@ export const tokens = (mode) => ({
           900: "#2c100f",
         },
         blueAccent: {
-          100: "#e1e2fe",
-          200: "#c3c6fd",
-          300: "#a4a9fc",
-          400: "#868dfb",
-          500: "#6870fa",
-          600: "#535ac8",
-          700: "#3e4396",
-          800: "#2a2d64",
-          900: "#151632",
+          100: "#0994DC",
+          200: "#62CCEE",
+          300: "#040444",
+          
         },
       }
     : {
@@ -107,15 +102,9 @@ export const tokens = (mode) => ({
           900: "#f8dcdb",
         },
         blueAccent: {
-          100: "#151632",
-          200: "#2a2d64",
-          300: "#3e4396",
-          400: "#535ac8",
-          500: "#6870fa",
-          600: "#868dfb",
-          700: "#a4a9fc",
-          800: "#c3c6fd",
-          900: "#e1e2fe",
+          100: "#040444",
+          200: "#62CCEE",
+          300: "#0994DC",
         },
       }),
 });
@@ -130,18 +119,18 @@ export const themeSettings = (mode) => {
         ? {
             // palette values for dark mode
             primary: {
-              main: colors.primary[500],
+              main: colors.blueAccent[300],
             },
             secondary: {
-              main: colors.greenAccent[500],
+              main: colors.blueAccent[200],
             },
             neutral: {
-              dark: colors.grey[700],
-              main: colors.grey[500],
-              light: colors.grey[100],
+              dark: colors.blueAccent[300],
+              main: colors.blueAccent[200],
+              light: colors.blueAccent[100],
             },
             background: {
-              default: colors.primary[500],
+              default: colors.blueAccent[300],
             },
           }
         : {
@@ -153,12 +142,13 @@ export const themeSettings = (mode) => {
               main: colors.greenAccent[500],
             },
             neutral: {
-              dark: colors.grey[700],
-              main: colors.grey[500],
-              light: colors.grey[100],
+              dark: colors.blueAccent[300],
+              main: colors.blueAccent[200],
+              light: colors.blueAccent[100],
             },
             background: {
-              default: "#EAEAEB",
+              // default: "#EAEAEB",
+              default: colors.blueAccent[200],
             },
           }),
     },

@@ -18,14 +18,16 @@ const table = ({ columns, data }) => {
       <Paper
         sx={{
           width: "100%",
+          height: "17rem",
           borderRadius: "15px 15px 0 0",
+          border: "2px solid ",
         }}
         elevation={5}
       >
         <TableContainer
           sx={{
             maxHeight: "73vh",
-            borderRadius: "15px 15px 0 0",
+            borderRadius: "15px 15px 15px 15px",
             backgroundColor:
               theme.palette.mode === "dark" ? colors.primary[600] : "white",
           }}
@@ -55,8 +57,7 @@ const table = ({ columns, data }) => {
                         : colors.blueAccent[500],
                     color: "white",
                   }}
-                >
-                </TableCell>
+                ></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -67,7 +68,6 @@ const table = ({ columns, data }) => {
                       {row[column.field]}
                     </TableCell>
                   ))}
-                  
                 </TableRow>
               ))}
             </TableBody>
