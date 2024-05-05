@@ -10,4 +10,5 @@ urlpatterns = [
 
 
     path('addprebooking/',addprebooking, name="addprebooking"),
+    path('getprebooking/',getprebooking, name="getprebooking"),
 ]

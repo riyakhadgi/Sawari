@@ -64,7 +64,7 @@ class _profileState extends State<profile> {
             TextField(
               controller: _nameController, // Assign the TextEditingController
               style: TextStyle(fontFamily: "Poppins", fontSize: 14),
-
+              enabled: false,
             ),
             Text("Username:",style: TextStyle(fontFamily: "Poppins",fontSize: 18),),
             SizedBox(height: 5,),
@@ -87,7 +87,7 @@ class _profileState extends State<profile> {
             TextField(
               controller: _addressController, // Assign the TextEditingController
               style: TextStyle(fontFamily: "Poppins", fontSize: 14),
-
+              enabled: false,
             ),
             SizedBox(height: 10,),
             Text("Phone:",style: TextStyle(fontFamily: "Poppins",fontSize: 18),),
@@ -95,39 +95,10 @@ class _profileState extends State<profile> {
             TextField(
               controller: _phoneController, // Assign the TextEditingController
               style: TextStyle(fontFamily: "Poppins", fontSize: 14),
-
+              enabled: false,
             ),
             SizedBox(height: 10,),
-            ElevatedButton(onPressed: ()async{
-              String name= _nameController.text;
-              String address=_addressController.text;
-              String phone=_phoneController.text;
-              var data={
-                "name":name,
-                "address":address,
-                "phone":phone
-              };
-              // var response = await user.updateuser(data, id);
-              // if(response['success']){
-              //   saveUserDataToSharedPreferences(response['data']);
-              //   ScaffoldMessenger.of(context).showSnackBar(
-              //     SnackBar(
-              //       content: Text(response['message']),
-              //       duration: Duration(seconds: 3),
-              //     ),
-              //   );
-              //   _getDataFromSharedPreferences();
-              // }
-              // else{
-              //   ScaffoldMessenger.of(context).showSnackBar(
-              //     SnackBar(
-              //       content: Text(response['message']),
-              //       duration: Duration(seconds: 3),
-              //     ),
-              //   );
-              // }
 
-            }, child: Text("Save"))
           ],
         ),
       ),

@@ -24,6 +24,12 @@ class MyDrawer extends StatelessWidget {
               },
             ),
             ListTile(
+              title: Text('Forgot Password'),
+              onTap: () async{
+                Navigator.pushNamed(context, '/sendEmail');
+              },
+            ),
+            ListTile(
               title: Text('Safety Tips'),
               onTap: () {
                 // Update UI based on item selection

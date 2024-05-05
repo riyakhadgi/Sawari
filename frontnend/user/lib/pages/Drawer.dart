@@ -26,8 +26,6 @@ class MyDrawer extends StatelessWidget {
             ListTile(
               title: Text('Forgot Password'),
               onTap: () async{
-                SharedPreferences prefs = await SharedPreferences.getInstance();
-                prefs.clear();
                 Navigator.pushNamed(context, '/sendEmail');
               },
             ),

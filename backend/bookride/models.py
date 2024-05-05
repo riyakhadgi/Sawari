@@ -8,7 +8,13 @@ class RideRequested(models.Model):
     fare=models.FloatField()
     user=models.ForeignKey('UserManagement.passengerUser',on_delete=models.CASCADE)
     created_at=models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=50, default='requested')
+    Status={
+        ('requested','requested'),
+        ('accepted','accepted'),
+        ('canceled','canceled'),
+        ('completed','completed')
+    }
+    status = models.CharField(max_length=50, choices=Status,default='requested')
     def __str__(self):
         return self.pickup
 
@@ -38,7 +44,13 @@ class Prebooking(models.Model):
     user=models.ForeignKey('UserManagement.passengerUser',on_delete=models.CASCADE)
     datetime=models.DateTimeField()
     created_at=models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=50, default='requested')
+    Status={
+        ('requested','requested'),
+        ('accepted','accepted'),
+        ('canceled','canceled'),
+        ('completed','completed')
+    }
+    status = models.CharField(max_length=50, choices=Status,default='requested')
     def __str__(self):
         return self.pickup
 

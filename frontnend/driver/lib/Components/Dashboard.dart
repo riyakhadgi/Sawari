@@ -17,7 +17,7 @@ import 'package:web_socket_channel/io.dart';
 
 class Dashboard extends StatefulWidget {
   Dashboard({Key? key});
-  final WebSocketChannel  channel = IOWebSocketChannel.connect('ws://192.168.1.66:8000/ws/notifications/');
+  final WebSocketChannel  channel = IOWebSocketChannel.connect('ws://192.168.1.94:8000/ws/notifications/');
   @override
   State<Dashboard> createState() => _DashboardState();
 }
@@ -37,9 +37,10 @@ class _DashboardState extends State<Dashboard> {
   List<Marker> markerData = [];
   List<Polyline> polylineData = [];
   late final WebSocketChannel channel;
+  List<dynamic> allrides=[];
 
   // final uriwsl=;
-   // final channel = WebSocketChannel.connect(Uri.parse('ws://192.168.1.66:8000/ws/notifications/'));
+     // final channel = WebSocketChannel.connect(Uri.parse('ws://192.168.1.66:8000/ws/notifications/'));
   @override
   void dispose() {
     pickupLocationController.dispose();
@@ -49,13 +50,23 @@ class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
     super.initState();
-    channel = IOWebSocketChannel.connect('ws://192.168.1.66:8000/ws/notifications/');
+    channel = IOWebSocketChannel.connect('ws://192.168.1.94:8000/ws/notifications/');
 
     // Listen for messages from the WebSocket channel
     channel.stream.listen(
-          (message) {
+          (message) async{
         print("Received message: $message");
-        // Handle the received message as needed
+        print("hi");
+        var response = await ride.getrides();
+       print("hi");
+        if( response['success']){
+          setState(() {
+            allrides.add(response['data']);
+          });
+        }
+        else{
+          print(response['message']);
+        }
       },
       onError: (error) {
         print("Error occurred: $error");
@@ -68,9 +79,23 @@ class _DashboardState extends State<Dashboard> {
     destinationController = TextEditingController();
     fareController=TextEditingController();
     _getUserLocation();
+    _getrides();
+    print(allrides);
   }
 
-
+  void _getrides()async{
+    var response = await ride.getrides();
+    print(response);
+    if( response['success']){
+      print("inside get_rides");
+      setState(() {
+        allrides.add(response['data']);
+      });
+    }
+    else{
+      print(response['message']);
+    }
+  }
 
 
   void _getUserLocation() async {

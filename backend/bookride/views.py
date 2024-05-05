@@ -98,3 +98,16 @@ def addprebooking(request):
         except Exception as e:
             return JsonResponse({'success':False,'message':str(e)})
     return JsonResponse({'success':False,'message':'Method should be POST'})
+
+@csrf_exempt
+def getprebooking(request):
+    if request.method=='GET':
+        accepted= Prebooking.objects.filter(status='accepted')
+        if accepted:
+            serializer=PrebookingSerializer(accepted,many=True)
+            return JsonResponse({'success':True,'data':serializer.data})
+        else:
+            rides=Prebooking.objects.filter(status='requested')
+            serializer=PrebookingSerializer(rides,many=True)
+        return JsonResponse({'success':True,'data':serializer.data})
+    return JsonResponse({'success':False,'message':'Method should be GET'})

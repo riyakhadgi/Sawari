@@ -110,15 +110,16 @@ def driver_login(request):
             print(username)
             print(password)
             user=driverUser.objects.get(username=username)
+            print(user)
             response=DriverUserSerializer(user)
             if check_password(password,user.password):
                 return JsonResponse({"success": True, "message": "Login successful.", "data": response.data})
             else:
-                return JsonResponse({"success": False, "message": "Invalid username or password."}, status=401)
-        except json.JSONDecodeError:
-            return JsonResponse({"success": False, "message": "Invalid JSON data."}, status=400)
+                return JsonResponse({"success": False, "message": "Invalid username or password."})
+        except Exception as e:
+            return JsonResponse({"success": False, "message": "No user found with the provided username."})
     else:
-        return JsonResponse({"success": False, "message": "Only POST requests are allowed."}, status=405)
+        return JsonResponse({"success": False, "message": "Only POST requests are allowed."})
 
     
 @csrf_exempt
@@ -206,6 +207,50 @@ def updatepasswordpassenger(request):
         password = data.get('password')
         try:
             user = passengerUser.objects.get(email=email)
+            user.password = make_password(password)
+            user.save()
+            return JsonResponse({"success": True, "message": "Password updated."})
+        except Exception as e:
+            return JsonResponse({"success": False, "message": "User does not exist."})
+
+
+@csrf_exempt 
+def verifydriver(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        email = data.get('email')
+
+        # Check if a user with the provided email exists
+        users = driverUser.objects.filter(email=email)
+        if users.exists():
+            user = users.first()  # Assuming only one user per email
+            OTP.objects.filter(email=email, active=True).update(active=False)
+            otp = random.randint(1000, 9999)
+            subject = 'Verification of Account'
+            message = f'Welcome {user.name},\nYour OTP for verification is {otp}.'
+            from_email = settings.EMAIL_HOST_USER
+            recipient_list = [user.email]
+            # Send the email using Gmail
+            send_mail(subject, message, from_email, recipient_list, fail_silently=True)
+            # Save OTP to the database
+            if saveotp(email, otp):
+                request.session['email'] = email
+                request.session['otp'] = otp
+                return JsonResponse({"success": True, "message": "Email sent."})
+            else:
+                return JsonResponse({"success": False, "message": "There was an error saving OTP."})
+        else:
+            return JsonResponse({"success": False, "message": "User does not exist."})
+    return JsonResponse({"success": False, "message": "Method should be POST."})
+
+@csrf_exempt
+def updatepassworddriver(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        email = data.get('email')
+        password = data.get('password')
+        try:
+            user = driverUser.objects.get(email=email)
             user.password = make_password(password)
             user.save()
             return JsonResponse({"success": True, "message": "Password updated."})

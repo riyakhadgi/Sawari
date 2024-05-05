@@ -1,5 +1,8 @@
+import 'package:driver/Components/Dashboard.dart';
+import 'package:driver/Components/Signup.dart';
 import 'package:driver/Controllers/UserController.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -13,77 +16,123 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   UserController user = UserController();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Login"),
+        backgroundColor: Color(0xFF040444),
+        title: Text("Login",style: TextStyle(color: Colors.white),),
         centerTitle: true,
         leading: IconButton(
           onPressed: () {},
           icon: const Icon(Icons.arrow_back),
         ),
       ),
-      body: Container(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: usernameController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Enter your username here',
-              ),
-            ),
-            const SizedBox(height: 20.0),
-            TextField(
-              controller: passwordController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Enter your password here',
-              ),
-              obscureText: true, // Hide the password
-            ),
-            const SizedBox(height: 20.0),
-            ElevatedButton(
-              onPressed: () async{
-                // Retrieve the values from the controllers
-                String username = usernameController.text;
-                String password = passwordController.text;
-                var response=await user.login(username, password);
-                if (response['success']) {
-                  // store data in shareadprefrences
-                  var userData=response['data'];
-                  await saveUserData(userData);
+      body:SingleChildScrollView(
+        child:  Container(
+          height: MediaQuery.of(context).size.height*0.89,
+          color: Color(0xFF040444),
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SvgPicture.asset('logo/Sawarilogo.svg', width: 150, height: 150,),
+              Container(
+                child: Column(
+                  children: [
+                    TextField(
+                      controller: usernameController,
+                      style: TextStyle(color: Colors.white),
+                      decoration: const InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.white, // Border color when focused
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.white, // Border color when not focused
+                            ),
+                          ),
+                          labelText: 'Enter your username here',
+                          labelStyle: TextStyle(color: Colors.white)
+                      ),
+                    ),
+                    const SizedBox(height: 20.0),
+                    TextField(
+                      controller: passwordController,
+                      style: TextStyle(color: Colors.white),
+                      decoration: const InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.white, // Border color when focused
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.white, // Border color when not focused
+                            ),
+                          ),
+                          labelText: 'Enter your password here',
+                          labelStyle: TextStyle(color: Colors.white)
+                      ),
+                      obscureText: true, // Hide the password
+                    ),
+                    SizedBox(height: 20.0),
+                    ElevatedButton(
+                      onPressed: () async {
+                        String username=usernameController.text;
+                        String password=passwordController.text;
+                        var r= await user.login(username, password);
+                        if(r['success']){
+                          print(r['data']);
+                          await saveUserDataToSharedPreferences(r['data']);
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) =>  Dashboard()),
+                          );
+                        }
+                        else{
+                          setState(() {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(r['message']),
+                                duration: Duration(seconds: 3),
+                              ),
+                            );
+                          });
+                        }
+                      },
+                      child: const Text("Continue"),
+                    ),
+                    SizedBox(height: 10,),
+                    Text("Don't Have an Account?",style: TextStyle(color: Colors.white,fontSize: 18),),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => const Signup())
+                        );
+                      },
+                      child: Text("Signup",style: TextStyle(color: Colors.white,fontSize: 20),),
+                    ),
+                  ],
+                ),
+              )
 
-                  // Navigate to the dashboard page
-                  Navigator.pushReplacementNamed(context, '/dashboard');
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(response['message']),
-                    ),
-                  );
-                } else {
-                  // Handle authentication failure, e.g., display an error message
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(response['message']),
-                    ),
-                  );
-                }
-              },
-              child: const Text("Continue"),
-            ),
-          ],
+
+            ],
+          ),
         ),
       ),
+
     );
   }
-  Future<void> saveUserData(Map<String, dynamic> userData) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    for (var entry in userData.entries) {
-      await prefs.setString(entry.key, entry.value.toString());
-    }
+  Future<void> saveUserDataToSharedPreferences(
+      Map<String, dynamic> userData) async {
+    var prefs = await SharedPreferences.getInstance();
+    userData.forEach((key, value) {
+      prefs.setString(key, value.toString());
+    });
   }
 }
