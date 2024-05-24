@@ -24,9 +24,9 @@ class RequestedRide{
 
 class Ride {
   // String url = 'http://192.168.1.66:8000'; //home
-  // String url = 'http://10.22.31.33:8000'; //college
-  String url= 'http://10.22.21.108:8000';  //2
-  final channel = IOWebSocketChannel.connect('ws://10.22.21.108:8000/ws/notifications/');
+  String url = 'http://10.22.8.131:8000'; //college
+  // String url= 'http://10.22.21.108:8000';  //2
+  final channel = IOWebSocketChannel.connect('ws://10.22.8.131:8000/ws/notifications/');
   Ride() {
     // Listen for notifications when the object is created
     channel.stream.listen((message) {

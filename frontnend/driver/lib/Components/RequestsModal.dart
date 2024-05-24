@@ -5,7 +5,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 void showrequests(BuildContext context) {
 
-  final WebSocketChannel  channel = IOWebSocketChannel.connect('ws://192.168.1.66:8000/ws/notifications/');
+  final WebSocketChannel  channel = IOWebSocketChannel.connect('ws://10.22.8.131:8000/ws/notifications/');
   Ride ride=Ride();
   ride.getrides();
   showModalBottomSheet(

@@ -17,7 +17,7 @@ import 'package:web_socket_channel/io.dart';
 
 class Dashboard extends StatefulWidget {
   Dashboard({Key? key});
-  final WebSocketChannel  channel = IOWebSocketChannel.connect('ws://192.168.1.94:8000/ws/notifications/');
+  final WebSocketChannel  channel = IOWebSocketChannel.connect('ws://10.22.8.131:8000/ws/notifications/');
   @override
   State<Dashboard> createState() => _DashboardState();
 }
