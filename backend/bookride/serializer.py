@@ -1,24 +1,20 @@
 from rest_framework import serializers
 from .models import *
+from UserManagement.models import *
 from UserManagement.serializer import *
 
 class RideRequestedSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField()
+    phone = serializers.SerializerMethodField()
     def get_username(self, obj):
         return obj.user.username
+    def get_phone(self, obj):
+        return obj.user.phonenumber
     class Meta:
         model=RideRequested
         fields='__all__'
 
 class AcceptedRideSerializer(serializers.ModelSerializer):
-    ride = RideRequestedSerializer(many=False, read_only=True)
-    username=serializers.SerializerMethodField()
-    pickup = serializers.CharField(source='ride.pickup')
-    drop = serializers.CharField(source='ride.drop')
-    distance = serializers.FloatField(source='ride.distance')
-    fare = serializers.FloatField(source='ride.fare')
-    
-
     class Meta:
         model=AcceptedRide
         fields='__all__'
@@ -33,10 +29,11 @@ class CanceledRideSerializer(serializers.ModelSerializer):
     
 class PrebookingSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField()
+    phone = serializers.SerializerMethodField()
     def get_username(self, obj):
         return obj.user.username
-    def get_drivername(self, obj):
-        return obj.driver.username
+    def get_phone(self, obj):
+        return obj.user.phonenumber
     class Meta:
         model=Prebooking
         fields='__all__'

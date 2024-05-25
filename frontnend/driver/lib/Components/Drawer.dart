@@ -43,12 +43,6 @@ class MyDrawer extends StatelessWidget {
               },
             ),
             ListTile(
-              title: Text('History'),
-              onTap: () async{
-                Navigator.pushNamed(context, '/requesthistory');
-              },
-            ),
-            ListTile(
               title: Text('Logout'),
               onTap: () async{
                 SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -56,8 +50,6 @@ class MyDrawer extends StatelessWidget {
                 Navigator.pushReplacementNamed(context, '/login');
               },
             ),
-
-
           ],
         ),
       ),

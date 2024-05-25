@@ -8,26 +8,69 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from datetime import datetime
 from django.utils.timezone import make_aware
-
+from UserManagement.models import passengerUser
 # Create your views here.
 @csrf_exempt
 def addRide(request):
     if request.method=='POST':
         data=json.loads(request.body)
-        serializer=RideRequestedSerializer(data=data)
+        userId=data['user']
+        user=passengerUser.objects.get(id=userId)
+        data['username']=user.name
+        data['phone']=user.phonenumber
         try:
+            serializer=RideRequestedSerializer(data=data)
             if serializer.is_valid():
                 serializer.save()
+                data['id']=serializer.data['id']
+                print("dqtq",data   )
                 channel_layer = get_channel_layer()
-# Inside your Django views or signals
                 async_to_sync(channel_layer.group_send)(
                     "notifications_group",
                     {
                         "type": "notify_driver",
-                        "message": "New ride request",
+                        "message": data,
                     }
                 )
                 return JsonResponse({'success':True,'message':'Ride Requested'})
+            return JsonResponse({'success':False,'message':serializer.errors})
+        except Exception as e:
+            return JsonResponse({'success':False,'message':str(e)})
+    return JsonResponse({'success':False,'message':'Method should be POST'})
+
+@csrf_exempt
+def acceptRide(request):
+    if request.method=='POST':
+        data=json.loads(request.body)
+
+        print(data)
+        try:
+            ride=RideRequested.objects.get(id=data['ride'])
+            ride.status='accepted'
+            ride.save()
+            serializer=AcceptedRideSerializer(data=data)
+            if serializer.is_valid():
+                serializer.save()
+                user_id = ride.user.id  # Assuming user ID is stored in the 'user' field of RideRequested
+                driver_id= data['driver']
+                driverobj= driverUser.objects.get(id=driver_id)
+                document= driverDocuments.objects.get(driver= driver_id)
+                data={
+                    "name": driverobj.name,
+                    "phone": driverobj.phonenumber,
+                    "vechile": document.vehicleModel,
+                    "vnum": document.vehicleNumber,
+
+                }
+                channel_layer = get_channel_layer()
+                async_to_sync(channel_layer.send)(
+                    f"user_{user_id}",  # Sending to the specific user's channel
+                    {
+                        "type": "notify_user",
+                        "message": data
+                    }
+                )
+                return JsonResponse({'success':True,'message':'Ride Accepted'})
             return JsonResponse({'success':False,'message':serializer.errors})
         except Exception as e:
             return JsonResponse({'success':False,'message':str(e)})
@@ -102,12 +145,83 @@ def addprebooking(request):
 @csrf_exempt
 def getprebooking(request):
     if request.method=='GET':
-        accepted= Prebooking.objects.filter(status='accepted')
-        if accepted:
-            serializer=PrebookingSerializer(accepted,many=True)
-            return JsonResponse({'success':True,'data':serializer.data})
-        else:
-            rides=Prebooking.objects.filter(status='requested')
-            serializer=PrebookingSerializer(rides,many=True)
+        serializers=Prebooking.objects.filter(status='requested')
+        serializer=PrebookingSerializer(serializers,many=True)
         return JsonResponse({'success':True,'data':serializer.data})
     return JsonResponse({'success':False,'message':'Method should be GET'})
+
+@csrf_exempt
+def acceptprebooking(request):
+    if request.method=='POST':
+        data=json.loads(request.body)
+        try:
+            prebooking=Prebooking.objects.get(id=data['prebooking'])
+            prebooking.status='accepted'
+            prebooking.save()
+            serializer=AcceptedprebookingSerializer(data=data)
+            if serializer.is_valid():
+                serializer.save()
+                return JsonResponse({'success':True,'message':'Prebooking Accepted'})
+            return JsonResponse({'success':False,'message':serializer.errors})
+        except Exception as e:
+            return JsonResponse({'success':False,'message':str(e)})
+    return JsonResponse({'success':False,'message':'Method should be POST'})
+
+@csrf_exempt
+def getrideinfo(request,id):
+    if request.method=='GET':
+        try:
+            ride=RideRequested.objects.filter(id=id).first()
+            serializer=RideRequestedSerializer(ride)
+            return JsonResponse({'success':True,'data':serializer.data})
+        except Exception as e:
+            return JsonResponse({'success':False,'message':str(e)})
+    else:
+        return JsonResponse({'success':False,'message':'Method should be GET'})
+    
+@csrf_exempt 
+def endride(request,id):
+    if request.method=='POST':
+        try:
+            ride=RideRequested.objects.get(id=id)
+            print(ride)
+            ride.status='completed'
+            ride.save()
+            return JsonResponse({'success':True,'message':'Ride Completed'})
+        except Exception as e:
+            return JsonResponse({'success':False,'message':str(e)})
+    else:
+        return JsonResponse({'success':False,'message':'Method should be POST'})
+    
+
+@csrf_exempt
+def driveracceptprebook(request,id):
+    if request.method=='GET':
+        try:
+            print("h")
+            accepted=Acceptedprebooking.objects.get(driver=id)
+            id=accepted.prebooking.id
+            print(id)
+            prebooking=Prebooking.objects.get(id=id)
+            serializer=PrebookingSerializer(prebooking)
+            print(serializer.data)
+            return JsonResponse({'success':True,'data':serializer.data})
+        except Exception as e:  
+            return JsonResponse({'success':False,'message':str(e)})
+    else:
+        return JsonResponse({'success':False,'message':'Method should be GET'})
+    
+
+@csrf_exempt
+def endprebook(request,id):
+    if request.method=='POST':
+        print(id)
+        try:
+            prebooking=Prebooking.objects.get(id=id)
+            prebooking.status='completed'
+            prebooking.save()
+            return JsonResponse({'success':True,'message':'Prebooking Completed'})
+        except Exception as e:
+            return JsonResponse({'success':False,'message':str(e)})
+    else:
+        return JsonResponse({'success':False,'message':'Method should be POST'})

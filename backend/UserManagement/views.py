@@ -1,3 +1,4 @@
+import base64
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import check_password,make_password
@@ -11,6 +12,7 @@ import string
 from django.core.mail import send_mail
 from django.conf import settings
 from .utils import saveotp
+from django.core.files.base import ContentFile
 
 
 @csrf_exempt
@@ -129,13 +131,14 @@ def driver_signup(request):
         print(data_json)
         serializer=DriverUserSerializer(data=data_json)
         if serializer.is_valid():
+            print("hi")
             user=serializer.save()
             user.password = make_password(data_json['password'])
             user.save()
-            return JsonResponse({"sucess": True, "message": "Signed up"})
+            return JsonResponse({"success": True, "message": "Signed up", "data": serializer.data})
         else:
-            return JsonResponse({"sucess": False, "message": serializer.errors})
-    return  JsonResponse({"sucess": False, "message": "The request should be POST"})
+            return JsonResponse({"success": False, "message": serializer.errors})
+    return  JsonResponse({"success": False, "message": "The request should be POST"})
 
 @csrf_exempt
 def editpassengerdata(request,id):
@@ -256,3 +259,47 @@ def updatepassworddriver(request):
             return JsonResponse({"success": True, "message": "Password updated."})
         except Exception as e:
             return JsonResponse({"success": False, "message": "User does not exist."})
+        
+
+@csrf_exempt
+def uploaddocument(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        driver_id = data.get('driver')
+        driver = driverUser.objects.get(id=driver_id)
+        citizenshipnumber = data.get('citizenshipnumber')
+        licensenumber = data.get('licensenumber')
+        vehicleNumber = data.get('vehicleNumber')
+        vechicleModel = data.get('vechicleModel')
+        license_front = data.get('licensefront')
+        license_back = data.get('licenseback')
+        citizenshipnumber_front = data.get('citizenshipfront')
+        citizenshipnumber_back = data.get('citizenshipback')
+        vehiclepage1 = data.get('vehicle1')
+        vehiclepage2 = data.get('vehicle2')
+        print(vehiclepage1)    
+
+        #decode from base64 to image
+        licensefrontbinary=base64.b64decode(license_front)
+        licensebackbinary=base64.b64decode(license_back)
+        citizenshipfrontbinary=base64.b64decode(citizenshipnumber_front)
+        citizenshipbackbinary=base64.b64decode(citizenshipnumber_back)
+        vehiclepage1binary=base64.b64decode(vehiclepage1)
+        vehiclepage2binary=base64.b64decode(vehiclepage2)
+
+        licensefront_image=ContentFile(licensefrontbinary, name='licensefront.png')
+        licenseback_image=ContentFile(licensebackbinary, name='licenseback.png')
+        citizenshipfront_image=ContentFile(citizenshipfrontbinary, name='citizenshipfront.png')
+        citizenshipback_image=ContentFile(citizenshipbackbinary, name='citizenshipback.png')
+        vehiclepage1_image=ContentFile(vehiclepage1binary, name='vehiclepage1.png')
+        vehiclepage2_image=ContentFile(vehiclepage2binary, name='vehiclepage2.png')
+        
+        try:
+            driverdocument = driverDocuments(driver=driver, citizenshipnumber=citizenshipnumber, licensenumber=licensenumber, vehicleNumber=vehicleNumber, vechicleModel=vechicleModel, license_front=licensefront_image, license_back=licenseback_image, citizenshipnumber_front=citizenshipfront_image, citizenshipnumber_back=citizenshipback_image, vehiclepage1=vehiclepage1_image, vehiclepage2=vehiclepage2_image)
+            driverdocument.save()
+            return JsonResponse({"success": True, "message": "Document uploaded."})
+        except Exception as e:
+            return JsonResponse({"success": False, "message": str(e)})
+    return JsonResponse({"success": False, "message": "Method should be POST."})
+
+    

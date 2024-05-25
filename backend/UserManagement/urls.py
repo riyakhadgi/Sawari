@@ -12,12 +12,13 @@ urlpatterns = [
     path('updatepasswordpassenger/',updatepasswordpassenger,name='updatepasswordpassenger'),
 
     path('adminlogin/',adminlogin,name="adminlogin"),
-   path('adminsignup/',adminsignup,name='adminsignup'),
+    path('adminsignup/',adminsignup,name='adminsignup'),
 
 
 
-   path('driverlogin/',driver_login,name='driver_login'),
+    path('driverlogin/',driver_login,name='driver_login'),
     path('driversignup/',driver_signup,name='driver_signup'),
     path('verifydriver/',verifydriver,name='verifydriver'),
     path('updatepassworddriver/',updatepassworddriver,name='updatepassworddriver'),
+    path('document/',uploaddocument,name='uploaddocument'),
 ]

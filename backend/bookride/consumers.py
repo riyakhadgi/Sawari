@@ -33,13 +33,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             {
                 'type': 'send_notification',
                 'message': message,
-                'data': {
-                    'name': 'John Doe',
-                    'pickupLocation': 'Kathmandu',
-                    'dropLocation': 'Pokhara',
-                    'fare': 1000,
-                    'distance': 200,
-                }
+                
             }
         )
 

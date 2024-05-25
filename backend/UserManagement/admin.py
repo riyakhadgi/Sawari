@@ -4,3 +4,4 @@ from .models import *
 admin.site.register(adminUser)
 admin.site.register(passengerUser)
 admin.site.register(driverUser)
+admin .site.register(driverDocuments)
