@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
-import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import LogoutIcon from '@mui/icons-material/Logout';
 import DirectionsCarOutlinedIcon from "@mui/icons-material/DirectionsCarOutlined";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import GroupIcon from '@mui/icons-material/Group';
@@ -37,15 +37,14 @@ const SideItem = ({ selected, setSelected }) => {
   const colors = tokens(theme.palette.mode);
   return (
     <Box paddingLeft="10%" mt={6}>
-      <Item
+      {/* <Item
         title="Dashboard"
         to="/restaurant/dashboard"
         icon={<HomeOutlinedIcon />}
         selected={selected}
         setSelected={setSelected}
-      />
-      <Divider />
-      <Typography
+      /> */}
+            <Typography
         variant="h6"
         color={colors.grey[100]}
         sx={{ m: "15px 0 5px 20px" }}
@@ -93,8 +92,19 @@ const SideItem = ({ selected, setSelected }) => {
 export default function Menubar() {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const [selected, setSelected] = useState("Dashboard");
+  const [selected, setSelected] = useState("Ride");
   const [name, setName] = useState("");
+  const handlelogout = () => {
+		// clear the cookies
+		const cookies = document.cookie.split(";").map((cookie) => cookie.trim());
+		const tokenCookie = cookies.find((cookie) => cookie.startsWith("token="));
+		if (tokenCookie) {
+			document.cookie =
+				"token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+		}
+		window.location.href = "/";
+
+	};
   useEffect(() => {
     // Extract token from cookies
     const cookies = document.cookie.split(";").map((cookie) => cookie.trim());
@@ -154,7 +164,20 @@ export default function Menubar() {
             selected={selected}
             setSelected={setSelected}
           />
-        
+        <Divider />
+
+        <MenuItem
+          icon={<LogoutIcon />}
+          sx={{
+            color: colors.grey[100],
+          }}
+
+    
+          onClick={handlelogout}
+        >
+          <Typography variant="h4">Logout</Typography>
+        </MenuItem>
+
       </Menu>
     </Sidebar>
   );

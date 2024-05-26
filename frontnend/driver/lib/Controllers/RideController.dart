@@ -23,7 +23,7 @@ class RequestedRide{
 }
 
 class Ride {
-  String url = 'http://192.168.56.1:8000'; //home
+  String url = 'http://192.168.1.94:8000'; //home
   // String url = 'http://10.22.8.131:8000'; //college
 
   final channel = IOWebSocketChannel.connect('ws://192.168.1.94:8000/ws/notifications/');

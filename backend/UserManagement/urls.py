@@ -21,4 +21,13 @@ urlpatterns = [
     path('verifydriver/',verifydriver,name='verifydriver'),
     path('updatepassworddriver/',updatepassworddriver,name='updatepassworddriver'),
     path('document/',uploaddocument,name='uploaddocument'),
+
+
+
+    #admin part
+    path('showdriver/',showdriver,name='showdriver'),
+    path('showuser/',showuser,name='showuser'),
+    path('showadmin/',showadmin,name='showadmin'), 
+    path('deleteadmin/<int:id>/',deleteadmin,name='deleteadmin'), 
+    
 ]

@@ -39,10 +39,14 @@ function Login() {
         }
         axios.post("http://127.0.0.1:8000/adminlogin/",postdata)
         .then((res)=>{
+          console.log(res)
             if(res.data.success){
                 console.log(res.data.message)
                 setCookies("token", res.data.message, 1);
-                navigate("/dashboard");
+                navigate("/ride");
+            }
+            else{
+              alert("Invalid Credentials")
             }
         })
         .catch((err)=>{

@@ -4,7 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserController {
-  String url = 'http://192.168.56.1:8000'; //home
+  String url = 'http://192.168.1.94:8000'; //home
   // String url = 'http://10.22.8.131:8000'; //college
   
   Future<String?> getuserid() async {

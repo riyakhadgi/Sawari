@@ -1,3 +1,4 @@
+import 'package:driver/Components/LoginPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -47,7 +48,10 @@ class MyDrawer extends StatelessWidget {
               onTap: () async{
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 prefs.clear();
-                Navigator.pushReplacementNamed(context, '/login');
+                Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) =>  LoginPage()),
+                        );
               },
             ),
           ],

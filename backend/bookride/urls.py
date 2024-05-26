@@ -16,4 +16,7 @@ urlpatterns = [
     path('acceptprebooking/',acceptprebooking, name="acceptprebooking"),
     path('getdriveraccept/<int:id>/',driveracceptprebook,name='driveracceptprebook'),
     path("endprebook/<int:id>/",endprebook,name='endprebook'),
+
+    #admin
+    path('showprebooking/',showprebooking,name='showprebooking')
 ]

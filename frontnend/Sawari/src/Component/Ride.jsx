@@ -7,7 +7,6 @@ import { acceptedcolumn, ridecolumn } from "../assets/Coloums.js";
 export default function Ride() {
   const [riderequested, setRideRequests] = useState([]);
   const [acceptedride, setAcceptedRides] = useState([]);
-  const [cancelledride, setCanceledRides] = useState([]);
   useEffect(() => {
     axios.get("http://127.0.0.1:8000/book/getallrides/").then((res) => {
       if (res.data.success) {
@@ -19,16 +18,11 @@ export default function Ride() {
           ...ride,
           type: "accepted_ride",
         }));
-        const canceledRides = res.data.data.canceled_requests.map((ride) => ({
-          ...ride,
-          type: "canceled_ride",
-        }));
 
         // Update state with separate arrays for each type of ride
         setRideRequests(rideRequests);
-        console.log(acceptedRides[0]["ride"]);
+        console.log(acceptedRides);
         setAcceptedRides(acceptedRides);
-        setCanceledRides(canceledRides);
       } else {
         console.error("Failed to fetch data");
       }
@@ -74,15 +68,13 @@ export default function Ride() {
     },
   ];
   return (
-    <Box
-      sx={{
-        padding: "2rem",
-      }}
-    >
-      <Box>
-        <Typography variant="h1">Ride</Typography>
+    <Box sx={{ padding: "2rem" }}>
+    <Box>
+      <Typography variant="h1">Ride</Typography>
+      <Box sx={{ height: 300, overflow: 'auto' }}>
         <Table columns={ridecolumn} data={riderequested} />
       </Box>
+    </Box>
       <Box
         sx={{
           display: "flex",
@@ -91,13 +83,11 @@ export default function Ride() {
           gap: "2rem",
         }}
       >
-        <Box>
-          <Typography variant="h1">Cancelled Ride</Typography>
-          <Table columns={columns} data={cancelledride} />
-        </Box>
-        <Box>
+        <Box sx={{ flex: 1 }}>
           <Typography variant="h1">Accepted Ride</Typography>
-          <Table columns={acceptedcolumn} data={acceptedride} />
+          <Box sx={{ height: 300, overflow: 'auto' }}>
+            <Table columns={acceptedcolumn} data={acceptedride} />
+          </Box>
         </Box>
       </Box>
     </Box>

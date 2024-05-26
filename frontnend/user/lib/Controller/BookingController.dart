@@ -8,16 +8,8 @@ import 'package:web_socket_channel/io.dart';
 class Book {
  // String url = 'http://192.168.1.66:8000'; //home
  // String url = 'http://10.22.31.33:8000'; //college
- String url= 'http://192.168.43.156:8000';  //2
- final channel = IOWebSocketChannel.connect(
-     'ws:// 10.22.21.108:8000/ws/notifications/');
- Book() {
-  // Listen for notifications when the object is created
-  channel.stream.listen((message) {
-   print("Received notification: $message");
-   // Handle incoming messages (notifications) here
-  });
- }
+ String url= 'http://192.168.1.94:8000';  //2
+
 
  Future<Map<String, dynamic>> addBooking(data) async {
   try {

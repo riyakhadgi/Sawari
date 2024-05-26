@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box } from "@mui/material";
 import { tokens } from "../Theme.jsx";
 import { useTheme } from "@mui/material";
 import Paper from "@mui/material/Paper";
@@ -8,28 +8,44 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
+import axios from "axios";
 
 const table = ({ columns, data }) => {
+    console.log(columns);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-
+  const onDelete = async (id) => {
+    console.log(id);
+    try {
+      const response = await axios.delete(
+        `http://127.0.0.1:8000/deleteadmin/${id}/`
+      );
+      console.log(response);
+    } catch (error) {
+      console.error("Error deleting restaurant:", error);
+    }
+    window.location.reload();
+  };
   return (
     <Box>
       <Paper
         sx={{
           width: "100%",
-      
           borderRadius: "15px 15px 0 0",
-          border: "2px solid ",
         }}
+        // square={false}
         elevation={5}
+        // variant="outlined"
       >
         <TableContainer
           sx={{
             maxHeight: "73vh",
-            borderRadius: "15px 15px 15px 15px",
+
+            // borderRadius: "15px 15px 0 0",
             backgroundColor:
-              theme.palette.mode === "dark" ? colors.primary[600] : "white",
+              theme.palette.mode === "dark" ? colors.primary[400] : "white",
           }}
         >
           <Table stickyHeader>
@@ -40,8 +56,8 @@ const table = ({ columns, data }) => {
                     sx={{
                       backgroundColor:
                         theme.palette.mode === "dark"
-                          ? colors.blueAccent[400]
-                          : colors.blueAccent[500],
+                          ? colors.primary[700]
+                          : colors.primary[600],
                       color: "white",
                     }}
                     key={column.field}
@@ -53,28 +69,39 @@ const table = ({ columns, data }) => {
                   sx={{
                     backgroundColor:
                       theme.palette.mode === "dark"
-                        ? colors.blueAccent[400]
-                        : colors.blueAccent[500],
+                        ? colors.primary[700]
+                        : colors.primary[600],
                     color: "white",
                   }}
-                ></TableCell>
+                >
+                  Actions
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {data.map((row, index) => (
+            {data.map((row, index) => (
                 <TableRow key={index}>
-                  {columns.map((column) => (
+                {columns.map((column) => (
                     <TableCell key={column.field}>
-                      {row[column.field]}
+                    {row[column.field]}
                     </TableCell>
-                  ))}
+                ))}
+                <TableCell>
+                    {/* Delete IconButton */}
+                    <IconButton
+                      sx={{ color: "red" }}
+                      onClick={() => onDelete(row.id)}
+                    >
+                    <DeleteIcon />
+                    </IconButton>
+                </TableCell>
                 </TableRow>
-              ))}
+            ))}
             </TableBody>
-          </Table>
+        </Table>
         </TableContainer>
-      </Paper>
+    </Paper>
     </Box>
-  );
+);
 };
 export default table;

@@ -37,7 +37,6 @@ class _PreBookingState extends State<PreBooking> {
   double distance = 0.0;
   List<Marker> markerData = [];
   List<Polyline> polylineData = [];
-  // final channel = IOWebSocketChannel.connect('ws://192.168.1.66:8000/ws/rides/');
   Book book=new Book();
 
 

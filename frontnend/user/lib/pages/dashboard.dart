@@ -35,7 +35,6 @@ class _DashboardState extends State<Dashboard> {
   double distance = 0.0;
   List<Marker> markerData = [];
   List<Polyline> polylineData = [];
-  final channel = IOWebSocketChannel.connect('ws://192.168.1.94:8000/ws/notifications/');
   Book book=new Book();
 
 

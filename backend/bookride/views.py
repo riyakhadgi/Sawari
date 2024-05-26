@@ -55,20 +55,22 @@ def acceptRide(request):
                 driver_id= data['driver']
                 driverobj= driverUser.objects.get(id=driver_id)
                 document= driverDocuments.objects.get(driver= driver_id)
+                print(driverobj.name,driverobj.phonenumber,document.vehicleModel,document.vehicleNumber)
+
                 data={
                     "name": driverobj.name,
                     "phone": driverobj.phonenumber,
                     "vechile": document.vehicleModel,
-                    "vnum": document.vehicleNumber,
-
+                    "vechileNumber": document.vehicleNumber,
                 }
+                print(data  )
                 channel_layer = get_channel_layer()
-                async_to_sync(channel_layer.send)(
-                    f"user_{user_id}",  # Sending to the specific user's channel
+                async_to_sync(channel_layer.group_send)(
+                    "notifications_group",  # Sending to the specific user's channel
                     {
                         "type": "notify_user",
                         "message": data
-                    }
+                    },
                 )
                 return JsonResponse({'success':True,'message':'Ride Accepted'})
             return JsonResponse({'success':False,'message':serializer.errors})
@@ -90,10 +92,8 @@ def getridehistory(request,id):
         try:
             ride=RideRequested.objects.filter(user=id).first()
             acceptedrides=AcceptedRide.objects.filter(ride=ride).all()
-            canceledride=CanceledRide.objects.filter(ride=ride).all()
             serializer1=AcceptedRideSerializer(acceptedrides,many=True)
-            serializer2=CanceledRideSerializer(canceledride,many=True)
-            return JsonResponse({'success':True,'accepted':serializer1.data,'canceled':serializer2.data})
+            return JsonResponse({'success':True,'accepted':serializer1.data})
         except Exception as e:
             return JsonResponse({'success':False,'message':str(e)})
     else:
@@ -105,16 +105,12 @@ def getRideAdmin(request):
     if request.method=='GET':
         rides=RideRequested.objects.all()
         accepted=AcceptedRide.objects.all()
-        canceled=CanceledRide.objects.all()
 
         ride=RideRequestedSerializer(rides,many=True).data
         accept=AcceptedRideSerializer(accepted,many=True).data
-        cancel=CanceledRideSerializer(canceled,many=True).data
-
         context = {
         'ride_requests': ride,
         'accepted_requests': accept,
-        'canceled_requests': cancel
         }
         return JsonResponse({'success':True,'data':context})
     return JsonResponse({'success':False,'message':'Method should be GET'})
@@ -225,3 +221,13 @@ def endprebook(request,id):
             return JsonResponse({'success':False,'message':str(e)})
     else:
         return JsonResponse({'success':False,'message':'Method should be POST'})
+    
+
+#admin
+@csrf_exempt
+def showprebooking(request):
+    if request.method=='GET':
+        prebookings=Prebooking.objects.all()
+        serializer=PrebookingSerializer(prebookings,many=True)
+        return JsonResponse({'success':True,'data':serializer.data})
+    return JsonResponse({'success':False,'message':'Method should be GET'})
